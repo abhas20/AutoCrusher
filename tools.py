@@ -424,7 +424,7 @@ def apply_bias_mitigation(
                     max_iter=30
                 )
                 fair_model.fit(X_tr_s, y_tr, sensitive_features=sf_tr)
-                y_pred = fair_model.predict(X_te_s)
+                y_pred = fair_model.predict(X_te_s, random_state=42)
                 
                 acc = round(accuracy_score(y_te, y_pred), 4)
                 f1 = round(f1_score(y_te, y_pred, zero_division=0), 4)

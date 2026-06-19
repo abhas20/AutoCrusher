@@ -58,10 +58,10 @@ def generate_dataset():
     return csv_path
 
 
-def test_real_dataset():
-    df= pd.read_csv('dataset/adult.csv')
-    for col in df.columns:
-        print(f"{col}: {df[col].unique()[:5]}")
+# def test_real_dataset():
+#     df= pd.read_csv('dataset/adult.csv')
+#     for col in df.columns:
+#         print(f"{col}: {df[col].unique()[:5]}")
 
 
 

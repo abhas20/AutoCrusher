@@ -1,6 +1,11 @@
 from google.adk import Agent, Workflow
 from google.adk.models import Gemini
 from tools import analyze_dataset_fields, calculate_fairlearn_bias, apply_bias_mitigation
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 def build_fairness_workflow(
     dataset_path: str,
@@ -16,6 +21,12 @@ def build_fairness_workflow(
     if not pred_col:
         from tools import generate_baseline_predictions
         dataset_path, pred_col = generate_baseline_predictions(dataset_path, label_col)
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    if(not api_key):
+        raise ValueError("GEMINI_API_KEY not set in environment variables. Please set it in your .env file or system environment.")
+    
+    os.environ["GEMINI_API_KEY"] = api_key
     
     # ── Agent 1: AuditorAgent ─────────────────────────────────────────────────
     auditor_agent = Agent(
@@ -80,7 +91,7 @@ Format:
       "demographic_parity_difference": 0.21,
       "disparate_impact_ratio": 0.55,
       "equalized_odds_difference": 0.12,
-      "verdict": "BIASED"
+      "verdict": "BIASED/NOT BIASED"
     }}
   }}
 }}
