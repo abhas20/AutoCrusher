@@ -1,6 +1,6 @@
-# AutoDetecter: AI Fairness Audit & Mitigation Pipeline
+# AutoCrusher: AI Fairness Audit & Mitigation Pipeline
 
-AutoDetecter is a modular, AI-powered system designed to audit datasets for bias, detect useless or sensitive proxy columns, and apply mitigation algorithms to train fair machine learning models. 
+AutoCrusher is a modular, AI-powered system designed to audit datasets for bias, detect useless or sensitive proxy columns, and apply mitigation algorithms to train fair machine learning models. 
 
 Built using the **Agent Development Kit (ADK) 2.2.0** and **Fairlearn**, the system exposes its functionality via a production-ready **FastAPI** service with dynamic, zero-restart model caching.
 
@@ -10,7 +10,8 @@ Built using the **Agent Development Kit (ADK) 2.2.0** and **Fairlearn**, the sys
 
 The auditing and mitigation pipeline operates as a directed workflow of three cooperative agents powered by the Gemma model:
 
-```mermaid
+```
+mermaid
 graph TD
     A[Dataset CSV] --> B[AuditorAgent]
     B -->|Proxy & Useless Fields Report| C[BiasConfirmerAgent]
@@ -27,7 +28,7 @@ graph TD
 ## ⚡ Key Features
 
 * **Optional Predictions (`pred_col`)**: If predictions are not supplied, the pipeline automatically trains a baseline classifier to audit raw datasets (AutoML mode).
-* **Deterministic Predictions**: Fairlearn's `ExponentiatedGradient` is a randomized classifier. AutoDetecter automatically handles and stabilizes predictions at inference time using a deterministic seed (`random_state=42`).
+* **Deterministic Predictions**: Fairlearn's `ExponentiatedGradient` is a randomized classifier. AutoCrusher automatically handles and stabilizes predictions at inference time using a deterministic seed (`random_state=42`).
 * **Hot-Reloadable Model Cache**: The FastAPI application uses low-overhead file metadata checks (`os.path.getmtime`) to reload updated pickle files instantly on the next API request without restarting the server.
 * **Modular FastAPI Directory Layout**:
   ```bash
@@ -124,13 +125,27 @@ The server will start at `http://localhost:8000`. You can access the interactive
 
 ---
 
-## 💡 Future Recommendations
+##  📈 Performance & Fairness Metrics
+The system outputs comprehensive reports at each stage of the pipeline, including:
+* **AuditorAgent**: Cramér's V, Normalized Mutual Information, and outcome imbalance scores for each feature.
+* **BiasConfirmerAgent**: Demographic Parity Difference, Equalized Odds Difference, and Disparate Impact Ratio for identified sensitive subgroups.
+* **MitigationAgent**: Model performance metrics (accuracy, F1-score) and fairness metrics for each candidate model, along with the final selected model's metrics.
 
-1. **Dashboard UI (Streamlit or Gradio)**:
-   Build a visualization dashboard showing the **Pareto frontier** of Accuracy vs. Fairness (Demographic Parity Difference) for all models trained during the mitigation phase. This helps developers choose the optimal model depending on corporate compliance requirements.
+---
 
-2. **Bias Drift Monitoring**:
-   In production, the demographic distributions of users making prediction requests may drift over time. Create an endpoint that tracks the rolling Demographic Parity Difference on input features to trigger alerts when bias shifts.
-
-3. **Multi-Feature Mitigation**:
-   Extend the mitigation tool to accept multiple sensitive features simultaneously (e.g., both `race` and `sex`), enforcing joint demographic constraints.
+## Contribution Guidelines
+AutoCrusher is an open-source project and any contributions are welcome! Please follow these guidelines:
+1. Fork the repository and create a new branch for your feature or bug fix.
+```
+  git clone "your_fork_url"
+  git checkout -b feature/your-feature-name
+```
+2. Make your changes and commit with clear messages.
+```  
+  git add .
+  git commit -m "Add your descriptive commit message here"
+```
+3. Push your branch and create a pull request to the main repository.
+```
+    git push origin feature/your-feature-name
+```
