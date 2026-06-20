@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from app.controllers.prediction_controller import predict_fair_outcome
 
 router = APIRouter(prefix="/predict", tags=["Prediction"])
@@ -20,6 +21,6 @@ def get_prediction(request: PredictionRequest):
         },
         "model_filename": "fair_adult_model.pkl"
     }
-    
+
     """
     return predict_fair_outcome(request.features,request.model_filename)

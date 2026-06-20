@@ -1,8 +1,10 @@
-from fastapi import FastAPI
-from app.routes.prediction import router as prediction_router
-from app.routes.mitigation import router as mitigation_router
-import app.state as state
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+
+import app.state as state
+from app.routes.mitigation import router as mitigation_router
+from app.routes.prediction import router as prediction_router
 
 
 @asynccontextmanager
@@ -10,7 +12,7 @@ async def lifespan(app: FastAPI):
     # Load model on startup
     state.load_model()
     yield
-    
+
 
 app = FastAPI(
     title="Bias-Aware Model Serving & Detection API",

@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from app.controllers.mitigation_controller import run_bias_workflow
 
 router = APIRouter(prefix="/run-mitigation", tags=["Mitigation"])
@@ -13,7 +14,7 @@ class AuditRequest(BaseModel):
 @router.post("/", summary="Run bias detection and mitigation pipeline")
 async def start_mitigation(request: AuditRequest):
     """
-    Exposes mitigation pipeline trigger endpoint. Expects a JSON object specifying 
+    Exposes mitigation pipeline trigger endpoint. Expects a JSON object specifying
     the path to the CSV file, label column, optional prediction column, and output filename.
     """
     return await run_bias_workflow(

@@ -1,10 +1,10 @@
-import os
 import asyncio
-import pandas as pd
+import os
+
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+import pandas as pd
 from dotenv import load_dotenv
+from sklearn.ensemble import RandomForestClassifier
 
 load_dotenv()
 
@@ -68,8 +68,9 @@ def generate_dataset():
 
 # ── Step 2: Run Fairness Workflow ─────────────────────────────────────────────
 async def run_workflow(csv_path: str, label_col: str, pred_col: str = None, output_filename: str = "fair_model.pkl"):
-    from agents import build_fairness_workflow
     from google.adk.runners import InMemoryRunner
+
+    from agents import build_fairness_workflow
 
     print(f"\n🚀 Initializing ADK Fairness Workflow for: {csv_path} (label: {label_col})...")
     workflow = build_fairness_workflow(
@@ -81,13 +82,13 @@ async def run_workflow(csv_path: str, label_col: str, pred_col: str = None, outp
 
     runner = InMemoryRunner(agent=workflow)
     print("🏃 Running workflow nodes...")
-    
+
     events = await runner.run_debug("Start Bias Detection and Mitigation Pipeline.")
-    
+
     print("\n==========================================")
     print("          WORKFLOW EXECUTION LOGS         ")
     print("==========================================\n")
-    
+
     for event in events:
         if event.content and event.content.parts:
             text = event.content.parts[0].text
